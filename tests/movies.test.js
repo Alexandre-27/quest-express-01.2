@@ -159,3 +159,46 @@ describe("PUT /api/movies/:id", () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe("DELETE /api/movies/:id", () => {
+  it("should delete movie", async () => {
+    const newMovie = {
+      title: "Transformers",
+      director: "Michael Bay",
+      year: "2007",
+      color: "1",
+      duration: 144,
+    };
+
+    const [result] = await database.query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [
+        newMovie.title,
+        newMovie.director,
+        newMovie.year,
+        newMovie.color,
+        newMovie.duration,
+      ]
+    );
+
+    const id = result.insertId;
+
+    const response = await request(app).delete(`/api/movies/${id}`);
+
+    expect(response.status).toEqual(204);
+  });
+
+  it("should return no movie", async () => {
+    const newMovie = {
+      title: "Transformers",
+      director: "Michael Bay",
+      year: "2007",
+      color: "1",
+      duration: 144,
+    };
+
+    const response = await request(app).delete("/api/movies/0").send(newMovie);
+
+    expect(response.status).toEqual(404);
+  });
+});
