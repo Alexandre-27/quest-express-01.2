@@ -15,6 +15,22 @@ describe("GET /api/movies", () => {
   });
 });
 
+describe("GET /api/movies/:id", () => {
+  it("should return one movie", async () => {
+    const response = await request(app).get("/api/movies/2");
+
+    expect(response.headers["content-type"]).toMatch(/json/);
+
+    expect(response.status).toEqual(200);
+  });
+
+  it("should return no movie", async () => {
+    const response = await request(app).get("/api/movies/0");
+
+    expect(response.status).toEqual(404);
+  });
+});
+
 describe("POST /api/movies", () => {
   it("Should return created movie", async () => {
     const newMovie = {
@@ -59,22 +75,6 @@ describe("POST /api/movies", () => {
       .send(movieWithMissingProps);
 
     expect(response.status).toEqual(422);
-  });
-});
-
-describe("GET /api/movies/:id", () => {
-  it("should return one movie", async () => {
-    const response = await request(app).get("/api/movies/1");
-
-    expect(response.headers["content-type"]).toMatch(/json/);
-
-    expect(response.status).toEqual(200);
-  });
-
-  it("should return no movie", async () => {
-    const response = await request(app).get("/api/movies/0");
-
-    expect(response.status).toEqual(404);
   });
 });
 
